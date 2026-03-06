@@ -41,6 +41,8 @@ IMX-Forge 是一个**个人维护的开源工作空间**，专注于将 NXP i.MX
 
 > 不再翻找厂商 Wiki。`clone → source → build → flash` —— 这是约定。
 
+> 参考 [todo && projectes](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/tree/main/document/todo) 了解我们的计划
+
 ---
 
 ## 🎯 支持的开发板
@@ -136,43 +138,7 @@ tested_on: 2025-01-01
 
 ## 🛠️ 快速开始
 
-### 1. 克隆仓库
-
-```bash
-git clone --recurse-submodules https://github.com/yourname/imx-forge.git
-cd imx-forge
-```
-
-### 2. 初始化构建环境
-
-**方式一：Docker（推荐，跨平台）**
-
-```bash
-docker build -t imx-forge-env docker/
-docker run -it --rm -v $(pwd):/workspace imx-forge-env
-```
-
-**方式二：本地 Ubuntu x86_64**
-
-```bash
-source scripts/env-init.sh
-```
-
-### 3. 选择板卡并构建
-
-```bash
-# 正点原子阿尔法 + Buildroot
-./scripts/build.sh --board alpha --rootfs buildroot
-
-# 正点原子阿尔法 + Debian
-./scripts/build.sh --board alpha --rootfs debian
-```
-
-### 4. 烧录
-
-```bash
-./scripts/flash.sh --board alpha --image output/imx6ull-alpha.img --target /dev/sdX
-```
+先不开始，只是骨架
 
 ---
 
