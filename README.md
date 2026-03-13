@@ -18,7 +18,7 @@
 [![Boards](https://img.shields.io/badge/Boards-IMX6ULL-blue?style=flat-square)](#支持的开发板)
 [![Kernel Track](https://img.shields.io/badge/Kernel-linux--imx_%7C_mainline_(WIP)-blueviolet?style=flat-square)](#技术路线)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](#贡献方式)
-
+[![WSL OK](https://img.shields.io/badge/WSL-Test-OK-brightgreen?style=flat-square)](#贡献方式)
 </div>
 
 ---
