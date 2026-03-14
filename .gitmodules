@@ -1,6 +1,8 @@
 [submodule "third_party/uboot-imx"]
 	path = third_party/uboot-imx
 	url = https://github.com/nxp-imx/uboot-imx.git
+	ignore = dirty
 [submodule "third_party/linux-imx"]
 	path = third_party/linux-imx
 	url = https://github.com/nxp-imx/linux-imx.git
+	ignore = dirty
