@@ -40,44 +40,41 @@ export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-1609459200}  # 2021-01-01 00:00:00
 export LC_ALL=C
 
 # ============================================
-# Step 1: Clean U-Boot Submodule Only
+# Step 1: Reset U-Boot Submodule to Default Branch
 # ============================================
-log_step "1/6: Cleaning U-Boot Submodule"
-
-cd "$PROJECT_ROOT"
-
-# Deinitialize only uboot-imx submodule
-log_info "Deinitializing uboot-imx submodule..."
-git submodule deinit --force third_party/uboot-imx 2>/dev/null || true
-
-# Remove only uboot-imx submodule directory and git module
-log_info "Removing uboot-imx submodule directory..."
-rm -rf .git/modules/third_party/uboot-imx
-rm -rf third_party/uboot-imx
-
-# Clean any untracked files in third_party/uboot-imx
-log_info "Cleaning untracked files..."
-git clean -ffdx third_party/uboot-imx 2>/dev/null || true
-
-log_info "U-Boot submodule cleaned"
-
-# ============================================
-# Step 2: Reinitialize U-Boot Submodule
-# ============================================
-log_step "2/6: Reinitializing U-Boot Submodule"
-
-log_info "Cloning uboot-imx submodule (may take a while)..."
-# Show progress and use single thread for better visibility
-GIT_TERMINAL_PROMPT=0 git submodule update --init --recursive --force --progress third_party/uboot-imx
-
-log_info "U-Boot submodule initialized"
-
-# ============================================
-# Step 3: Verify Submodule State
-# ============================================
-log_step "3/6: Verifying Submodule State"
+log_step "1/5: Resetting U-Boot Submodule"
 
 cd "$UBOOT_DIR"
+
+# Detect default branch
+log_info "Detecting default branch..."
+DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+# Fallback to lf_v2025.04 if detection fails
+: "${DEFAULT_BRANCH:=lf_v2025.04}"
+log_info "Default branch: ${DEFAULT_BRANCH}"
+
+# Fetch upstream to ensure we have latest state
+log_info "Fetching from upstream..."
+git fetch origin || true
+
+# Switch to default branch
+log_info "Switching to ${DEFAULT_BRANCH}..."
+git checkout "$DEFAULT_BRANCH" 2>/dev/null || git checkout -b "$DEFAULT_BRANCH" "origin/$DEFAULT_BRANCH"
+
+# Reset to match upstream exactly
+log_info "Resetting to origin/${DEFAULT_BRANCH}..."
+git reset --hard "origin/${DEFAULT_BRANCH}"
+
+# Clean all unstaged files and untracked files
+log_info "Cleaning working directory..."
+git clean -ffdx
+
+log_info "U-Boot submodule reset complete"
+
+# ============================================
+# Step 2: Verify Submodule State
+# ============================================
+log_step "2/5: Verifying Submodule State"
 
 # Show current commit for reproducibility
 UBOOT_COMMIT=$(git rev-parse HEAD)
@@ -89,34 +86,9 @@ log_info "U-Boot version: ${UBOOT_DESCRIBE}"
 log_info "U-Boot branch: ${UBOOT_BRANCH}"
 
 # ============================================
-# Step 4: Lock to Specific Tag
+# Step 3: Create Release Branch
 # ============================================
-log_step "4/7: Locking to Release Tag"
-
-# Lock to specific tag for reproducible builds
-# Update this for each release
-RELEASE_TAG="${UBOOT_RELEASE_TAG:-lf_v2025.04}"
-
-log_info "Fetching tags..."
-git fetch --tags || true
-
-log_info "Checking out tag: ${RELEASE_TAG}"
-if git rev-parse "$RELEASE_TAG" >/dev/null 2>&1; then
-    git checkout "$RELEASE_TAG"
-    log_info "Locked to tag: ${RELEASE_TAG}"
-else
-    log_warn "Tag ${RELEASE_TAG} not found, using current HEAD"
-    git reset --hard HEAD
-fi
-
-git clean -ffdx
-
-log_info "U-Boot ready at: $(git describe --tags --always 2>/dev/null || echo 'unknown')"
-
-# ============================================
-# Step 5: Create Release Branch
-# ============================================
-log_step "5/7: Creating Release Branch"
+log_step "3/5: Creating Release Branch"
 
 # Generate branch name from date and commit
 BRANCH_NAME="release-build-$(date +%Y%m%d)-$(git rev-parse --short HEAD)"
@@ -126,9 +98,9 @@ git checkout -b "$BRANCH_NAME"
 log_info "Release branch created"
 
 # ============================================
-# Step 6: Apply Patch
+# Step 4: Apply Patch
 # ============================================
-log_step "5/6: Applying Patch"
+log_step "4/5: Applying Patch"
 
 if [ ! -f "$PATCH" ]; then
     log_error "Patch file not found: $PATCH"
@@ -154,9 +126,9 @@ PATCHED_FILES=$(git diff --name-only HEAD 2>/dev/null | wc -l)
 log_info "Modified files: ${PATCHED_FILES}"
 
 # ============================================
-# Step 6: Build (delegate to build-uboot.sh)
+# Step 5: Build (delegate to build-uboot.sh)
 # ============================================
-log_step "7/7: Building U-Boot"
+log_step "5/5: Building U-Boot"
 
 cd "$PROJECT_ROOT"
 
