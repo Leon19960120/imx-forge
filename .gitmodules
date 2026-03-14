@@ -6,3 +6,6 @@
 	path = third_party/linux-imx
 	url = https://github.com/nxp-imx/linux-imx.git
 	ignore = dirty
+[submodule "third_party/busybox"]
+	path = third_party/busybox
+	url = https://github.com/mirror/busybox.git

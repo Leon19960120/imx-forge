@@ -30,7 +30,18 @@ fi
 # Configuration
 ARCH=arm
 CROSS_COMPILE=arm-none-linux-gnueabihf-
-DEFCONFIG=imx_v7_defconfig
+DEFCONFIG=imx_aes_defconfig
+FAST_BUILD=0
+
+# Parse arguments
+for arg in "$@"; do
+    case $arg in
+        --fast-build)
+            FAST_BUILD=1
+            shift
+            ;;
+    esac
+done
 
 # Directories
 LINUX_SRC_DIR="${PROJECT_ROOT}/third_party/linux-imx"
@@ -299,6 +310,9 @@ verify_build_artifacts() {
 # Main build process
 main() {
     log_info "Starting Linux kernel build for ${DEFCONFIG}"
+    if [ ${FAST_BUILD} -eq 1 ]; then
+        log_info "Fast build mode enabled (skipping distclean)"
+    fi
     log_info "========================================"
 
     # Pre-build checks
@@ -311,7 +325,11 @@ main() {
     log_info "========================================"
 
     # Build process
-    do_distclean
+    if [ ${FAST_BUILD} -eq 0 ]; then
+        do_distclean
+    else
+        log_info "Skipping distclean (fast build mode)"
+    fi
     do_configure
     do_build
 
