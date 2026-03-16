@@ -212,7 +212,7 @@ do_distclean() {
     log_info "Running distclean... Using Remove All as to make all clear!"
     # Remove and recreate output directory for clean build
     log_info "  Removing ${OUTPUT_DIR}"
-    rm -rf "${OUTPUT_DIR}"
+    # rm -rf "${OUTPUT_DIR}"
     mkdir -p "${OUTPUT_DIR}"
 }
 

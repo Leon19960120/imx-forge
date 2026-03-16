@@ -20,6 +20,7 @@
 #   --stage <n>    只执行指定阶段（1-6）
 #                  1=fetch源码, 2=fetch工具链, 3=build host, 4=install target deps, 5=build target, 6=package
 #   --branch <name> 使用自定义分支名（默认: compile-YYYYMMDD）
+#   --no-fonts     跳过字体安装步骤
 # ==============================================================================
 
 set -euo pipefail
@@ -42,6 +43,7 @@ DEFAULT_BRANCH="main"
 # ================================================================
 SPECIFIC_STAGE=""
 CUSTOM_BRANCH_NAME=""
+SKIP_FONTS=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -53,12 +55,17 @@ while [[ $# -gt 0 ]]; do
             CUSTOM_BRANCH_NAME="$2"
             shift 2
             ;;
+        --no-fonts)
+            SKIP_FONTS=true
+            shift
+            ;;
         -h|--help)
             echo "用法: $0 [--stage <n>] [--branch <name>]"
             echo ""
             echo "选项:"
             echo "  --stage <n>      只执行指定阶段（1-6）"
             echo "  --branch <name>  使用自定义分支名（默认: compile-YYYYMMDD）"
+            echo "  --no-fonts       跳过字体安装步骤"
             echo ""
             echo "输出目录:"
             echo "  Host Qt:   ${PROJECT_ROOT}/host/qt6-host/"
@@ -350,7 +357,7 @@ else
     # --------------------------------------
     log_info ""
     log_info "----------------------------------------"
-    log_info "步骤 2/2: 安装第三方库"
+    log_info "步骤 2/3: 安装第三方库"
     log_info "----------------------------------------"
     log_info "源目录: ${THIRD_PARTY_SYSROOT}"
     log_info "目标目录: ${ROOTFS_DIR}"
@@ -375,7 +382,7 @@ else
             LIB_FILES+=("$file")
             ((lib_count++)) || true
             [[ $lib_count -ge $max_libs ]] && break
-        done < <(find "${THIRD_PARTY_SYSROOT}" -type f \( -name "*.so*" -o -name "*.a" \) -print0 2>/dev/null)
+        done < <(find "${THIRD_PARTY_SYSROOT}" \( -type f -o -type l \) \( -name "*.so*" -o -name "*.a" \) -print0 2>/dev/null)
 
         # 查找可执行文件（排除 downloads 和 build 目录），最多显示 10 个
         bin_count=0
@@ -415,13 +422,10 @@ else
         log_info "  2. 拷贝可执行文件 -> ${ROOTFS_DIR}/usr/bin/"
         log_info ""
 
-        # 等待用户确认
-        read -p "按 Enter 继续安装第三方库到 ROOTFS，或 Ctrl+C 取消..."
-
         # 拷贝库文件
         log_info "正在拷贝库文件..."
         mkdir -p "${ROOTFS_DIR}/usr/lib"
-        if find "${THIRD_PARTY_SYSROOT}" -type f \( -name "*.so*" -o -name "*.a" \) -print0 2>/dev/null | \
+        if find "${THIRD_PARTY_SYSROOT}" \( -type f -o -type l \) \( -name "*.so*" -o -name "*.a" \) -print0 2>/dev/null | \
            xargs -0 -I {} cp -d {} "${ROOTFS_DIR}/usr/lib/" 2>/dev/null; then
             log_info "✓ 已拷贝库文件到 ${ROOTFS_DIR}/usr/lib/"
         else
@@ -447,6 +451,50 @@ else
     fi
 
     # --------------------------------------
+    # 第 3 步: 安装字体到 ROOTFS
+    # --------------------------------------
+    if [[ "${SKIP_FONTS}" == false ]]; then
+        log_info ""
+        log_info "----------------------------------------"
+        log_info "步骤 3/3: 安装字体"
+        log_info "----------------------------------------"
+
+        # 加载字体配置
+        # shellcheck disable=SC1090
+        if [[ -f "${SCRIPT_DIR}/config/qt/fonts.conf" ]]; then
+            source "${SCRIPT_DIR}/config/qt/fonts.conf"
+
+            if [[ "${FONTS_ENABLED}" == "true" ]]; then
+                log_info ""
+                log_info "将要安装的字体:"
+                log_info "  - DejaVu Fonts (拉丁字符 + 等宽字体)"
+                log_info "  - Noto Sans CJK (中日韩字符)"
+                log_info "  - Noto Color Emoji (Emoji 支持)"
+                log_info ""
+                log_info "提示: 字体安装脚本会检测已存在的字体并跳过"
+                log_info ""
+
+                # 调用字体安装脚本
+                if bash "${SCRIPT_DIR}/install_fonts.sh"; then
+                    log_info "✓ 字体已安装到 ROOTFS"
+                else
+                    log_warn "字体安装失败或跳过"
+                fi
+            else
+                log_info "字体安装已禁用 (FONTS_ENABLED=false)"
+            fi
+        else
+            log_warn "字体配置文件不存在，跳过字体安装"
+        fi
+    else
+        log_info ""
+        log_info "----------------------------------------"
+        log_info "步骤 3/3: 安装字体"
+        log_info "----------------------------------------"
+        log_info "已跳过 (--no-fonts)"
+    fi
+
+    # --------------------------------------
     # 安装完成摘要
     # --------------------------------------
     log_info ""
@@ -458,6 +506,11 @@ else
     log_info "  Qt 插件:    ${ROOTFS_DIR}/usr/lib/qt6/plugins/"
     log_info "  Qt QML:     ${ROOTFS_DIR}/usr/lib/qt6/qml/"
     log_info "  第三方库:   ${ROOTFS_DIR}/usr/lib/"
+    log_info "  字体:       ${ROOTFS_DIR}/usr/share/fonts/"
+    log_info ""
+    log_info "Qt 字体环境变量:"
+    log_info "  export QT_QPA_FONTDIR=/usr/share/fonts"
+    log_info "  export LANG=C.UTF-8"
     log_info ""
 fi
 
