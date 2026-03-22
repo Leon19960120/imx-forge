@@ -13,9 +13,10 @@
 
 [![License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)](LICENSE)
 [![WSL2](https://img.shields.io/badge/WSL2-Tested%20%26%20OK-brightgreen?style=flat-square)](#-wsl2-深度友好)
-[![Kernel](https://img.shields.io/badge/Kernel-linux--imx%206.12.3-blue?style=flat-square)](#-双轨内核策略)
+[![Kernel](https://img.shields.io/badge/Kernel-dual%20track%20(6.12.3%20%2B%20mainline)-blue?style=flat-square)](#-双轨内核策略)
+[![Mainline](https://img.shields.io/badge/Mainline-migrated%20%EF%83%A0-brightgreen?style=flat-square)](#-双轨内核策略)
 [![Bootloader](https://img.shields.io/badge/Bootloader-uboot--imx%202025--04-yellow?style=flat-square)](#-双轨内核策略)
-[![Board](https://img.shields.io/badge/Board-i.MX6ULL-blueviolet?style=flat-square)](#-支持的开发板)
+[![Board](https://img.shields.io/badge/Board-alpha%20%E2%9C%85-blueviolet?style=flat-square)](#-支持的开发板)
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](#-贡献指南)
 
 </div>
@@ -60,7 +61,7 @@
 ```
 patches/
 ├── [linux-imx]   NXP BSP 6.12.3 ← 当前推荐
-└── [mainline]    上游内核      ← WIP 🚧
+└── [mainline]    上游内核      ← ✅ 已完成
 ```
 
 稳定优先，长期向上游靠拢。
@@ -97,10 +98,12 @@ tar -xf arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz
 sudo mv arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-linux-gnueabihf /opt/arm-gnu-toolchain
 export PATH=/opt/arm-gnu-toolchain/bin:$PATH
 
-# 4. 一键构建
-./scripts/build_helper/build-uboot.sh
-./scripts/build_helper/build-linux.sh
-./scripts/build_helper/build-busybox.sh
+# 4. 一键构建（推荐）或分步构建
+./scripts/release-all.sh              # 一键构建所有组件
+# 或分步构建：
+# ./scripts/build_helper/build-uboot.sh
+# ./scripts/build_helper/build-linux.sh
+# ./scripts/build_helper/build-busybox.sh
 
 # 5. 烧录到 SD 卡，启动！
 ```
@@ -126,7 +129,7 @@ export PATH=/opt/arm-gnu-toolchain/bin:$PATH
 
 | 板卡 | 芯片 | 存储 | 状态 | 备注 |
 |------|------|------|------|------|
-| 正点原子阿尔法 | i.MX6ULL | eMMC / SD | 🚧 进行中 | 首要支持目标 |
+| 正点原子阿尔法 | i.MX6ULL | eMMC / SD | ✅ 完整支持 | 首要支持目标，设备树完整 |
 | 自制板 v1 | i.MX6ULL | eMMC / SD | 📋 规划中 | 通过 DTB Overlay 接入 |
 
 ---
@@ -144,21 +147,22 @@ export PATH=/opt/arm-gnu-toolchain/bin:$PATH
 
 ```
                     ┌─────────────────────────────┐
-                    │        v0.x  [当前]          │
+                    │        v0.5  [当前]          │
                     │  linux-imx (NXP BSP 6.12.3)   │
+                    │  + mainline kernel 支持       │
                     │  U-Boot NXP fork             │
                     └──────────────┬──────────────┘
-                                   │ 补丁向上游提交 / 移植
+                                   │ mainline 适配完善
                     ┌──────────────▼──────────────┐
-                    │        v1.x  [中期]          │
-                    │  + mainline kernel 初步支持  │
-                    │  + U-Boot mainline track     │
-                    └──────────────┬──────────────┘
-                                   │ mainline 趋于稳定
-                    ┌──────────────▼──────────────┐
-                    │        v2.x  [长期]          │
+                    │        v1.x  [下一阶段]       │
                     │  mainline 成为推荐轨道        │
                     │  linux-imx 作为兼容备选       │
+                    └──────────────┬──────────────┘
+                                   │ 长期维护
+                    ┌──────────────▼──────────────┐
+                    │        v2.x  [未来]          │
+                    │  完全迁移到上游              │
+                    │  简化维护流程                │
                     └─────────────────────────────┘
 ```
 
@@ -205,13 +209,13 @@ imx-forge/
 
 ## 🚧 当前重点方向
 
-- [ ] 正点原子阿尔法板卡支持完善（eMMC / SD 双存储路径）
-- [ ] WSL2 USB 设备直通完整指南
+- [x] 正点原子阿尔法板卡支持完善（eMMC / SD 双存储路径）
+- [x] Mainline 内核迁移
 - [ ] QT6 + GT911 触摸屏完整示例
-- [ ] 内核与 U-Boot 补丁规范确定
+- [ ] 自制板 v1 支持
 - [ ] 教程文档持续完善
 
-完整规划见 [document/todo/todo.md](document/todo/todo.md)。
+完整规划见 [document/todo/todo.md](document/todo/todo.md)，项目状态见 [STATUS.md](STATUS.md)。
 
 ---
 
@@ -242,6 +246,8 @@ MIT LICENSE —— 详见 [LICENSE](LICENSE)
 ## 🔗 相关链接
 
 - **快速入门**: [QUICK_START.md](QUICK_START.md)
+- **项目状态**: [STATUS.md](STATUS.md)
+- **变更日志**: [CHANGELOG.md](CHANGELOG.md)
 - **教程目录**: [document/tutorial/](document/tutorial/)
 - **问题反馈**: [GitHub Issues](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/issues)
 - **项目规划**: [document/todo/todo.md](document/todo/todo.md)
