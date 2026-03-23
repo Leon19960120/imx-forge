@@ -5,3 +5,18 @@ out/
 host/
 
 .claude
+
+# Kernel module build artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.symvers
+*.order
+*.cmd
+
+# Build system internals
+.tmp_versions/
+modules.builtin
+modules.builtin.modinfo

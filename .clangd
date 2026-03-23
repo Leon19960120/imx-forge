@@ -1,0 +1,23 @@
+# .clangd
+CompileFlags:
+  CompilationDatabase: third_party/linux_mainline
+  Remove:
+    - -mno-fp-ret-in-387
+    - -mpreferred-stack-boundary=*
+    - -mindirect-branch=*
+    - -mindirect-branch-register
+    - -fno-allow-store-data-races
+    - -fconserve-stack
+    - -mrecord-mcount
+    - -mfunction-return=*
+    - -mskip-rax-setup
+    - -mharden-sls=*
+    - -mno-fdpic
+    - -fno-ipa-sra
+    - -fzero-init-padding-bits=all
+
+Diagnostics:
+  Suppress:
+    - drv_unknown_argument
+    - invalid-token-paste
+    - invalid_token_after_toplevel_declarator
