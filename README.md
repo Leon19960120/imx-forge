@@ -97,16 +97,7 @@ cd imx-forge
 
 # 2. 安装依赖（Ubuntu/WSL2）
 sudo apt install -y build-essential gcc make bison flex device-tree-compiler \
-<<<<<<< HEAD
-<<<<<<< HEAD
-    libssl-dev libncurses-dev python3-pyelftools swig picocom imagemagick
-=======
-    libssl-dev libncurses-dev python3-pyelftools swig picocom imagemagick cmake
->>>>>>> a1c4e00 ([README update]: 添加 imagemagick cmake 依赖到 README)
-=======
     libssl-dev libncurses-dev python3-pyelftools swig picocom imagemagick cmake ninja-build meson libts-dev libpulse-dev libasound2-dev
->>>>>>> 5697aff ([README update]: 添加 imagemagick 依赖到 README)
-
 # 3. 安装 ARM 工具链（ARM GNU Toolchain 15.2）
 wget https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz
 tar -xf arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz
