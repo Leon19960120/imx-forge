@@ -222,7 +222,12 @@ check_dependencies() {
         fi
         
         case "$answer" in
-            [Yy]*)  
+            [Yy]*)
+                # 检查sudo权限
+                if ! sudo -v &>/dev/null; then
+                    log_error "需要sudo权限来安装依赖包"
+                    return 1
+                fi
                 log_info "Installing dependencies..."
                 sudo apt update && sudo apt install -y ${MISSING_PKGS[*]}
                 if [ $? -eq 0 ]; then
@@ -268,10 +273,35 @@ check_busybox_dependencies() {
     check_dependencies BUSYBOX_PKGS "BusyBox"
 }
 
+# 显示帮助信息
+show_help() {
+    cat << EOF
+Usage: $(basename "$0") [OPTIONS]
+
+检查主机依赖包并可选安装缺失的依赖。
+
+OPTIONS:
+    --stage <1|2|3|4>    检查特定构建阶段的依赖包
+                         1 = U-Boot依赖
+                         2 = Linux依赖
+                         3 = Mainline Linux依赖
+                         4 = BusyBox依赖
+    -h, --help           显示此帮助信息
+
+EXAMPLES:
+    $(basename "$0")              # 检查所有依赖包
+    $(basename "$0") --stage 1    # 只检查U-Boot依赖包
+    $(basename "$0") --help       # 显示帮助信息
+
+EOF
+}
+
 # 主函数（如果直接运行）
 if [[ "$(basename "$0")" == "env-init.sh" ]]; then
     if [ $# -eq 0 ]; then
         check_all_dependencies
+    elif [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+        show_help
     elif [ "$1" == "--stage" ] && [ $# -eq 2 ]; then
         case "$2" in
             1)
@@ -292,11 +322,13 @@ if [[ "$(basename "$0")" == "env-init.sh" ]]; then
                 ;;
             *)
                 echo "Usage: $0 [--stage 1|2|3|4]"
+                echo "Use '$0 --help' for more information"
                 exit 1
                 ;;
         esac
     else
         echo "Usage: $0 [--stage 1|2|3|4]"
+        echo "Use '$0 --help' for more information"
         exit 1
     fi
 fi
