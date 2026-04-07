@@ -6,6 +6,15 @@
 
 ## 使用方法
 
+### 显示帮助信息
+
+```bash
+./scripts/init/env-init.sh --help
+./scripts/init/env-init.sh -h
+```
+
+这将显示完整的使用说明，包括所有选项和示例。
+
 ### 检查所有依赖
 
 ```bash
@@ -23,8 +32,8 @@
 # 检查 Stage 2 (Linux Kernel) 依赖
 ./scripts/init/env-init.sh --stage 2
 
-# 检查 Stage 3 (BusyBox) 依赖
-./scripts/init/env-init.sh --stage 3
+# 检查 Stage 4 (BusyBox) 依赖
+./scripts/init/env-init.sh --stage 4
 ```
 
 ## 依赖包列表

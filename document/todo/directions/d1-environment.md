@@ -162,16 +162,18 @@
 - 提供修复建议
 
 **验收标准**：
-- [ ] 可以检测缺失的依赖
-- [ ] 可以自动设置环境变量
-- [ ] 可以验证工具链版本
-- [ ] 输出清晰的环境报告
-- [ ] 支持 WSL2
-- [ ] 提供使用文档
+- [x] 可以检测缺失的依赖
+- [x] 可以自动设置环境变量
+- [x] 可以验证工具链版本
+- [x] 输出清晰的环境报告
+- [x] 支持 WSL2
+- [x] 提供使用文档
 
 **相关文件**：
-- `scripts/init/env-init.sh`
-- `document/tutorial/start/02_env_init_guide.md`（新增）
+- `scripts/init/env-init.sh` ✅ 已完成
+- `document/tutorial/start/02_env_init_guide.md` ✅ 已完成
+
+**状态**：✅ **已完成** (2026-04-07)
 
 ---
 

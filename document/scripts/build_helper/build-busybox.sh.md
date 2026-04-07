@@ -29,6 +29,7 @@ BusyBox 的构建脚本与其他构建脚本有显著不同，因为它需要支
 ```
 build-busybox.sh
     ├─ scripts/lib/logging.sh (日志工具库)
+    ├─ scripts/init/env-init.sh (依赖检查库) ← 新增
     ├─ third_party/busybox (BusyBox 源码子模块)
     └─ arm-none-linux-gnueabihf-gcc (交叉编译工具链)
 ```
@@ -138,6 +139,15 @@ build-busybox.sh
 
 **作用**：检查主机系统是否安装了必需的构建工具。
 
+**实现方式**：
+
+通过导入 `scripts/init/env-init.sh`，调用 `check_busybox_dependencies()` 函数实现依赖检查：
+
+```bash
+source "${SCRIPT_DIR}/../init/env-init.sh"
+check_busybox_dependencies || exit 1
+```
+
 **检查项目**：
 
 | 工具/库 | 用途 |
@@ -149,11 +159,17 @@ build-busybox.sh
 **输出示例**：
 
 ```
-[INFO] Checking host dependencies...
+[INFO] 检查 BusyBox 依赖包...
 [INFO]   ✓ build-essential
 [INFO]   ✓ libncurses-dev
-[INFO] All host dependencies found
+[INFO] All BusyBox dependencies found
 ```
+
+**详细的依赖检查逻辑**：
+
+请参考以下文档：
+- [env-init.sh 源码](../../init/env-init.sh)
+- [环境初始化指南](../../tutorial/start/02_env_init_guide.md)
 
 #### check_toolchain()
 
