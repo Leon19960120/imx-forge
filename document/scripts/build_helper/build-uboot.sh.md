@@ -28,6 +28,7 @@ U-Boot 的构建比 Linux 内核更复杂，因为它需要生成多种格式的
 ```
 build-uboot.sh
     ├─ scripts/lib/logging.sh (日志工具库)
+    ├─ scripts/init/env-init.sh (依赖检查库) ← 新增
     ├─ scripts/logo_helper/logo_helper.sh (Logo 生成工具)
     ├─ third_party/uboot-imx (U-Boot 源码子模块)
     └─ arm-none-linux-gnueabihf-gcc (交叉编译工具链)
@@ -91,6 +92,15 @@ build-uboot.sh
 
 **作用**：检查主机系统是否安装了所有必需的构建工具。
 
+**实现方式**：
+
+通过导入 `scripts/init/env-init.sh`，调用 `check_uboot_dependencies()` 函数实现依赖检查：
+
+```bash
+source "${SCRIPT_DIR}/../init/env-init.sh"
+check_uboot_dependencies || exit 1
+```
+
 **U-Boot 特有依赖**：
 
 与 Linux 内核构建脚本相比，U-Boot 构建需要额外的工具：
@@ -101,6 +111,7 @@ build-uboot.sh
 | `python3-pyelftools` | ELF 文件解析库 | 是 |
 | `libssl-dev` | 加密库（FIT Image 签名） | 是 |
 | `libgnutls28-dev` | 加密库 | 是 |
+| `imagemagick` | Logo 图片转换 | 是 |
 
 **检查项目**：
 
@@ -109,7 +120,7 @@ build-uboot.sh
 gcc, make, bc, bison, flex, dtc, python3
 
 # U-Boot 特有工具
-swig
+swig, imagemagick
 
 # Python 模块检查
 python3-pyelftools (通过 python3 -c "import elftools" 检查)
@@ -121,7 +132,7 @@ libssl-dev, libgnutls28-dev, libncurses-dev
 **输出示例**：
 
 ```
-[INFO] Checking host dependencies...
+[INFO] 检查 U-Boot 依赖包...
 [INFO]   ✓ build-essential
 [INFO]   ✓ bc
 [INFO]   ✓ bison
@@ -133,8 +144,15 @@ libssl-dev, libgnutls28-dev, libncurses-dev
 [INFO]   ✓ libgnutls28-dev
 [INFO]   ✓ libncurses-dev
 [INFO]   ✓ python3-pyelftools
-[INFO] All host dependencies found
+[INFO]   ✓ imagemagick
+[INFO] All U-Boot dependencies found
 ```
+
+**详细的依赖检查逻辑**：
+
+请参考以下文档：
+- [env-init.sh 源码](../../init/env-init.sh)
+- [环境初始化指南](../../tutorial/start/02_env_init_guide.md)
 
 #### check_toolchain()
 

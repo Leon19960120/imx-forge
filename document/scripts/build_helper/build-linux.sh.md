@@ -28,6 +28,7 @@
 ```
 build-linux.sh
     ├─ scripts/lib/logging.sh (日志工具库)
+    ├─ scripts/init/env-init.sh (依赖检查库) ← 新增
     ├─ third_party/linux-imx (Linux内核源码子模块)
     └─ arm-none-linux-gnueabihf-gcc (交叉编译工具链)
 ```
@@ -95,6 +96,15 @@ build-linux.sh
 
 **作用**：检查主机系统是否安装了所有必需的构建工具。
 
+**实现方式**：
+
+通过导入 `scripts/init/env-init.sh`，调用 `check_linux_dependencies()` 函数实现依赖检查：
+
+```bash
+source "${SCRIPT_DIR}/../init/env-init.sh"
+check_linux_dependencies || exit 1
+```
+
 **检查项目**：
 
 | 工具/库 | 用途 | 检查方式 |
@@ -113,23 +123,24 @@ build-linux.sh
 **输出示例**：
 
 ```
-[INFO] Checking host dependencies...
+[INFO] 检查 Linux 依赖包...
 [INFO]   ✓ build-essential
 [INFO]   ✓ bc
 [INFO]   ✓ bison
-[WARN]   ✗ python3-pyelftools (not found)
-[ERROR] Missing dependencies: python3-pyelftools
-
-[INFO] Install missing packages with:
-  sudo apt install python3-pyelftools
+[INFO]   ✓ flex
+[INFO]   ✓ device-tree-compiler
+[INFO]   ✓ python3
+[INFO]   ✓ libssl-dev
+[INFO]   ✓ libgnutls28-dev
+[INFO]   ✓ libncurses-dev
+[INFO] All Linux dependencies found
 ```
 
-**设计细节**：
+**详细的依赖检查逻辑**：
 
-- 使用 `|| true` 防止 `set -e` 导致的提前退出
-- 分别维护 `FOUND_PKGS` 和 `MISSING_PKGS` 数组
-- 使用 `sort -u` 去重
-- 只在有缺失包时才报错退出
+请参考以下文档：
+- [env-init.sh 源码](../../init/env-init.sh)
+- [环境初始化指南](../../tutorial/start/02_env_init_guide.md)
 
 #### check_toolchain()
 
