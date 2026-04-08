@@ -2,13 +2,13 @@
 
 > **最后更新**：2026-04-06
 > **当前版本**：v0.5
-> **查看详情**：[roadmap.md](roadmap)
+> **查看详情**：[roadmap.md](roadmap.md)
 
 ---
 
 ## 📑 快速导航
 
-- 🗺️ **总体路线图**：[roadmap.md](roadmap)
+- 🗺️ **总体路线图**：[roadmap.md](roadmap.md)
 - 📁 **发展方向**：
   - [D1: 环境完善](directions/d1-environment) - 开发环境搭建
   - [D2: 工具完备](directions/d2-tools) - 提升开发效率
@@ -125,7 +125,7 @@ document/todo/
 
 我们欢迎所有形式的贡献！
 
-1. 查看 [roadmap.md](roadmap) 了解项目规划
+1. 查看 [roadmap.md](roadmap.md) 了解项目规划
 2. 根据你的兴趣选择一个方向
 3. 在该方向中选择合适的任务
 4. 在 GitHub Issues 中声明你的意图
@@ -137,4 +137,4 @@ document/todo/
 
 **让嵌入式 Linux 开发变得简单！** 🚀
 
-> 💡 **提示**：新用户建议先阅读 [roadmap.md](roadmap) 了解项目全貌，然后根据兴趣选择合适的发展方向。
+> 💡 **提示**：新用户建议先阅读 [roadmap.md](roadmap.md) 了解项目全貌，然后根据兴趣选择合适的发展方向。

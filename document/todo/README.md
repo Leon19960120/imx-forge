@@ -10,7 +10,7 @@
 
 如果你是第一次了解 IMX-Forge，建议按以下顺序阅读：
 
-1. **📖 [总体路线图](roadmap)** - 了解项目全貌和发展规划
+1. **📖 [总体路线图](roadmap.md)** - 了解项目全貌和发展规划
 2. **📦 [v0.5 归档](archive/v0.5-milestone)** - 了解已完成的工作
 3. **🎯 [当前重点：D1 方向](directions/d1-environment)** - 查看环境完善方向
 
@@ -18,8 +18,8 @@
 
 如果你想参与项目开发：
 
-1. **📋 [任务总览](todo)** - 查看所有待办任务
-2. **🗺️ [路线图](roadmap)** - 选择你感兴趣的方向
+1. **📋 [任务总览](todo.md)** - 查看所有待办任务
+2. **🗺️ [路线图](roadmap.md)** - 选择你感兴趣的方向
 3. **📁 [方向详情](directions/)** - 查看具体任务
 4. **🎯 [示例项目](projects/)** - 查看项目清单
 
@@ -119,7 +119,7 @@
 
 ### 贡献流程
 
-1. 阅读 [路线图](roadmap) 和 [任务总览](todo)
+1. 阅读 [路线图](roadmap.md) 和 [任务总览](todo.md)
 2. 选择你感兴趣的任务
 3. 在 GitHub Issues 中声明你的意图
 4. Fork 项目并创建分支
@@ -134,7 +134,7 @@
 
 ### Q: 我应该从哪里开始？
 
-**A**: 如果你是新用户，建议从 [roadmap.md](roadmap) 开始。如果你想贡献代码，查看 [todo.md](todo) 或 [D1 方向](directions/d1-environment)。
+**A**: 如果你是新用户，建议从 [roadmap.md](roadmap.md) 开始。如果你想贡献代码，查看 [todo.md](todo.md) 或 [D1 方向](directions/d1-environment)。
 
 ### Q: 方向和里程碑有什么区别？
 
@@ -150,7 +150,7 @@
 
 ### Q: 如何查看项目进度？
 
-**A**: 主路线图 [roadmap.md](roadmap) 有详细的进度说明和发展方向介绍。
+**A**: 主路线图 [roadmap.md](roadmap.md) 有详细的进度说明和发展方向介绍。
 
 ### Q: 如何查看项目详情？
 
