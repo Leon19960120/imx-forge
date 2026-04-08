@@ -1,15 +1,3 @@
-# Outputs
-out/
-
-# Host Third Parties
-host/
-
-.claude
-
-.vscode/
-# Local Sites debugs
-.venv/
-
 # Kernel module build artifacts
 *.o
 *.ko
@@ -24,3 +12,6 @@ host/
 .tmp_versions/
 modules.builtin
 modules.builtin.modinfo
+
+# Device Tree
+*.dtb
