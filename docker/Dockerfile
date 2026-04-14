@@ -37,7 +37,7 @@ LABEL maintainer="IMX-Forge Team"
 LABEL description="i.MX6ULL 嵌入式 Linux 开发环境"
 LABEL version="1.0"
 
-ARG USER_NAME=developer
+ARG USER_NAME=ubuntu
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
@@ -82,9 +82,8 @@ ENV PATH="/opt/arm-gnu-toolchain/bin:${PATH}"
 ENV CROSS_COMPILE=arm-none-linux-gnueabihf-
 ENV ARCH=arm
 
-RUN groupadd -g ${GROUP_ID} ${USER_NAME} || true \
-    && useradd -m -u ${USER_ID} -g ${GROUP_ID} -s /bin/bash ${USER_NAME} || true \
-    && chown -R ${USER_NAME}:${USER_NAME} /workspace
+# 使用 ubuntu 用户（基础镜像已存在），无需创建
+RUN chown -R ${USER_NAME}:${USER_NAME} /workspace
 
 RUN echo '#!/bin/bash\n\
 set -e\n\
