@@ -154,11 +154,31 @@ build_specific_driver() {
     log_info "========================================"
 
     # 调用共享构建库
-    driver_build "$driver" "$board" "build" "$kernel"
+    if driver_build "$driver" "$board" "build" "$kernel"; then
+        log_info ""
+        log_info "📦 产物位置: ${PROJECT_ROOT}/out/driver_artifacts/${driver}/${board}/"
+        log_info "========================================"
 
-    log_info ""
-    log_info "📦 产物位置: ${PROJECT_ROOT}/out/driver_artifacts/${driver}/${board}/"
-    log_info "========================================"
+        # 构建成功后询问是否部署
+        echo ""
+        echo -e "${GREEN}构建成功！${NC}"
+        echo -n "是否部署驱动? [Y/n]: "
+        read -r response
+
+        # 默认为是，除非用户明确输入 n 或 N
+        if [[ -z "$response" ]] || [[ "$response" =~ ^[Yy]$ ]]; then
+            echo ""
+            log_info "开始部署驱动..."
+            # 调用部署脚本
+            "${SCRIPT_DIR}/deploy_driver.sh" "$driver" "$board"
+        else
+            log_info "跳过部署"
+        fi
+    else
+        log_error ""
+        log_error "构建失败，跳过部署"
+        return 1
+    fi
 }
 
 # 清理指定驱动
