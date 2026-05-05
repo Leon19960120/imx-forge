@@ -41,11 +41,13 @@ static ssize_t beep_write(struct file *filp, const char __user *buf,
     struct beep_dev *dev = filp->private_data;
     unsigned char val;
 
-    if (count != 1)
+    if (count != 1) {
         return -EINVAL;
+    }
 
-    if (copy_from_user(&val, buf, 1))
+    if (copy_from_user(&val, buf, 1)) {
         return -EFAULT;
+    }
 
     if (val == BEEP_ON) {
         gpiod_set_value(dev->gpio, 0);
@@ -74,8 +76,9 @@ static int beep_probe(struct platform_device *pdev)
     int ret;
 
     dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-    if (!dev)
+    if (!dev) {
         return -ENOMEM;
+    }
     beep_data = dev;
 
     /* 1. 获取 GPIO（输出高电平初始化，蜂鸣器默认关闭） */
@@ -136,8 +139,9 @@ static void beep_remove(struct platform_device *pdev)
 {
     struct beep_dev *dev = beep_data;
 
-    if (!dev)
+    if (!dev) {
         return;
+    }
 
     /* 卸载驱动时确保蜂鸣器关闭 */
     if (dev->gpio) {
