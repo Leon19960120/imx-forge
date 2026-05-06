@@ -6,11 +6,12 @@
 #include <linux/device.h>
 #include <linux/gpio/consumer.h>
 #include <linux/uaccess.h>
-#include <linux/of.h>          /* 解决 of_device_id 不完整错误 */
+#include <linux/of.h>
+#include <linux/types.h>
 
-#define BEEP_NAME   "beep"
-#define BEEP_ON     0
-#define BEEP_OFF    1
+#define BEEP_NAME       "beep"
+static const u8  BEEP_ON  = 0;
+static const u8  BEEP_OFF = 1;
 
 struct beep_dev {
     dev_t           dev_num;
@@ -39,12 +40,16 @@ static ssize_t beep_write(struct file *filp, const char __user *buf,
                           size_t count, loff_t *ppos)
 {
     struct beep_dev *dev = filp->private_data;
-    unsigned char val;
+    
+    if (!dev) {
+        return -EINVAL;
+    }
 
     if (count != 1) {
         return -EINVAL;
     }
-
+    
+    uint8_t val;
     if (copy_from_user(&val, buf, 1)) {
         return -EFAULT;
     }
@@ -73,7 +78,6 @@ static const struct file_operations beep_fops = {
 static int beep_probe(struct platform_device *pdev)
 {
     struct beep_dev *dev;
-    int ret;
 
     dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
     if (!dev) {
@@ -84,13 +88,13 @@ static int beep_probe(struct platform_device *pdev)
     /* 1. 获取 GPIO（输出高电平初始化，蜂鸣器默认关闭） */
     dev->gpio = devm_gpiod_get(&pdev->dev, "beep", GPIOD_OUT_HIGH);
     if (IS_ERR(dev->gpio)) {
-        ret = PTR_ERR(dev->gpio);
+        int ret = PTR_ERR(dev->gpio);
         dev_err_probe(&pdev->dev, ret, "Failed to get beep GPIO\n");
         return ret;
     }
 
     /* 2. 动态分配设备号 */
-    ret = alloc_chrdev_region(&dev->dev_num, 0, 1, BEEP_NAME);
+    int ret = alloc_chrdev_region(&dev->dev_num, 0, 1, BEEP_NAME);
     if (ret < 0) {
         dev_err(&pdev->dev, "Failed to allocate device number\n");
         return ret;
