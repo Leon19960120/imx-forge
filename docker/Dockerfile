@@ -77,6 +77,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     ccache \
+    unzip \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
