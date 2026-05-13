@@ -29,7 +29,7 @@ const HTML_TAGS = new Set([
 
 // Only skip actual registered Vue components, not all PascalCase patterns
 const VUE_COMPONENTS = new Set([
-  'ChapterNav', 'ChapterLink', 'HomeTipBanner',
+  'ChapterNav', 'ChapterLink', 'HomeTipBanner', 'Badge', 
   'PageHeader', 'StatusTag', 'StepFlow', 'StepItem', 'InfoCard',
   'RoadMap', 'RoadMapPhase',
   'HomeArchDiagram',
@@ -48,6 +48,9 @@ function processLine(line: string): string {
   return segments.map((seg, i) => {
     if (i % 2 === 1) return seg
     return seg.replace(/<([^<>\n]+)>/g, (match, inner) => {
+      // Extract tag name (first word) for Vue component check
+      const tagName = inner.trim().split(/\s+/)[0]
+      if (VUE_COMPONENTS.has(tagName)) return match
       return looksLikeCppTemplate(inner)
         ? `&lt;${inner.trim()}&gt;`
         : match
