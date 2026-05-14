@@ -32,8 +32,8 @@
 # 检查 Stage 2 (Linux Kernel) 依赖
 ./scripts/init/env-init.sh --stage 2
 
-# 检查 Stage 4 (BusyBox) 依赖
-./scripts/init/env-init.sh --stage 4
+# 检查 Stage 3 (BusyBox) 依赖
+./scripts/init/env-init.sh --stage 3
 ```
 
 ## 依赖包列表
@@ -52,7 +52,8 @@
 - libncurses-dev
 - imagemagick
 
-### Stage 2: Linux Kernel (Mainline)
+### Stage 2: Linux Kernel (Mainline/NXP BSP) 
+目前，项目默认的选项为NXP BSP，不过两者使用的依赖完全一致！
 - build-essential
 - bc
 - bison
