@@ -25,7 +25,8 @@
   <ChapterLink num="01" href="./">TODO 索引 —— 文档导航首页</ChapterLink>
   <ChapterLink num="02" href="roadmap">总体路线图 —— 项目发展规划和方向</ChapterLink>
   <ChapterLink num="03" href="todo">待办事项 —— 当前进度和任务总览</ChapterLink>
-  <ChapterLink num="04" href="projects/">示例项目 —— 完整的项目清单和详情</ChapterLink>
+  <ChapterLink num="04" href="tutorial-gap-analysis">教程缺口分析 —— 旧教程对比与缺口补充</ChapterLink>
+  <ChapterLink num="05" href="projects/">示例项目 —— 完整的项目清单和详情</ChapterLink>
 </ChapterNav>
 
 ::: warning 当前重点：D1 方向 - 环境完善

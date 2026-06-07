@@ -1,7 +1,7 @@
 # 方向 D2：工具完备
 
-> **最后更新**：2026-05-21
-> **任务数量**：23项 (6工具 + 17文档)
+> **最后更新**：2026-06-07
+> **任务数量**：50项 (9工具 + 41文档)
 
 ---
 
@@ -22,9 +22,9 @@
 | 优先级 | 工具任务 | 文档任务 | 总计 |
 |--------|----------|----------|------|
 | P0 | - | - | - |
-| P1 | 3项 | 17项 | 20 |
+| P1 | 6项 | 41项 | 47 |
 | P2 | 3项 | - | 3 |
-| **总计** | **6** | **17** | **23** |
+| **总计** | **9** | **41** | **50** |
 
 ---
 
@@ -32,15 +32,18 @@
 
 > 提升开发效率和调试能力的关键功能
 
-### 工具任务 (3项)
+### 工具任务 (6项)
 
 | 任务 | 推荐基础 | 说明 |
 |------|----------|------|
 | D2-003: select-board.sh | D1-006 | 板卡切换脚本 |
 | D2-004: 板卡接入文档 | D1-006 | 多板卡接入规范 |
 | D2-005: CI - Patch 校验 | - | 自动补丁格式检查 |
+| D2-007: build-buildroot.sh | D1-004 | Buildroot 根文件系统构建脚本 |
+| D2-008: buildroot_menuconfig.sh | D2-007 | Buildroot 配置管理工具 |
+| D2-009: clean_buildroot.sh | D2-007 | Buildroot 清理工具 |
 
-### 文档任务 (17项)
+### 文档任务 (23项)
 
 #### P1-1: 系统调试手册 (10项)
 
@@ -68,6 +71,53 @@
 | [ ] Core dump debugging workflow / core dump 调试流程 | `document/tutorial/debug/` |
 | [ ] Basic logging workflow / 基础日志收集流程 | `document/tutorial/debug/` |
 | [ ] Basic performance inspection tools / 基础性能分析工具说明 | `document/tutorial/tools/` |
+
+#### P1-3: 构建工具 (新增，基于旧教程 Ch 3, 34, 40)
+
+| 任务 | 相关文件 |
+|------|----------|
+| [ ] Makefile basics and advanced / Makefile 基础与进阶 | `document/tutorial/tools/` |
+| [ ] Makefile syntax and实战 / Makefile 语法与实战 | `document/tutorial/tools/` |
+| [ ] Cross-compilation Makefile practice / 交叉编译 Makefile 实践 | `document/tutorial/tools/` |
+| [ ] CMake cross-compilation / CMake 交叉编译 | `document/tutorial/tools/` |
+| [ ] CMakeLists.txt writing / CMakeLists.txt 编写 | `document/tutorial/tools/` |
+| [ ] CMake with Qt cross-compilation / CMake 与 Qt 交叉编译 | `document/tutorial/tools/` |
+| [ ] menuconfig principles and usage / menuconfig 原理与使用 | `document/tutorial/tools/` |
+| [ ] Kconfig syntax / Kconfig 语法 | `document/tutorial/tools/` |
+| [ ] Kernel/U-Boot configuration practice / 内核/uboot 配置实战 | `document/tutorial/tools/` |
+| [ ] VIM quick start / VIM 快速入门 | `document/tutorial/ubuntu/` |
+| [ ] VIM modes and operations / VIM 模式与操作 | `document/tutorial/ubuntu/` |
+| [ ] VIM configuration and plugins / VIM 配置与插件 | `document/tutorial/ubuntu/` |
+| [ ] GCC compilation options / GCC 编译选项详解 | `document/tutorial/tools/` |
+| [ ] Static and dynamic library compilation / 静态库与动态库编译 | `document/tutorial/tools/` |
+| [ ] objdump, nm, readelf usage / objdump, nm, readelf 使用 | `document/tutorial/tools/` |
+| [ ] ldd library dependency checking / ldd 查看库依赖 | `document/tutorial/tools/` |
+| [ ] Time measurement and performance analysis / 时间测量与性能分析 | `document/tutorial/tools/` |
+
+##### P1-3a: Buildroot 根文件系统构建（新增）
+
+| 任务 | 相关文件 |
+|------|----------|
+| [ ] Buildroot 概述与对比分析 / Buildroot overview and comparison | `document/tutorial/build/04_buildroot_introduction.md` |
+| [ ] Buildroot 快速开始指南 / Buildroot quickstart guide | `document/tutorial/build/05_buildroot_quickstart.md` |
+| [ ] Buildroot 配置系统详解 / Buildroot config system explained | `document/tutorial/build/06_buildroot_config.md` |
+| [ ] Buildroot 定制化与包管理 / Buildroot customization and packages | `document/tutorial/build/07_buildroot_customization.md` |
+| [ ] Buildroot 故障排查手册 / Buildroot troubleshooting guide | `document/tutorial/build/08_buildroot_troubleshooting.md` |
+| [ ] Buildroot 与 QT6 集成实战 / Buildroot with QT6 integration | `document/tutorial/practical/03_buildroot_qt6.md` |
+
+#### P1-4: 驱动开发工具 (新增，基于旧教程 Ch 52-76)
+
+| 任务 | 相关文件 |
+|------|----------|
+| [ ] I2C driver framework complete tutorial / I2C 驱动框架完整教程 | `document/tutorial/driver/` |
+| [ ] SPI driver framework complete tutorial / SPI 驱动框架完整教程 | `document/tutorial/driver/` |
+| [ ] UART driver development / UART 驱动开发 | `document/tutorial/driver/` |
+| [ ] Blocking/non-blocking I/O complete tutorial / 阻塞/非阻塞 I/O 完整教程 | `document/tutorial/driver/` |
+| [ ] Async notification (fasync) / 异步通知机制 | `document/tutorial/driver/` |
+| [ ] Linux device model detailed / Linux 设备模型详解 | `document/tutorial/driver/` |
+| [ ] Regmap API detailed guide / Regmap API 详解 | `document/tutorial/driver/` |
+| [ ] IIO subsystem framework / IIO 子系统框架 | `document/tutorial/driver/` |
+| [ ] ADC driver development / ADC 驱动开发 | `document/tutorial/driver/` |
 
 ---
 

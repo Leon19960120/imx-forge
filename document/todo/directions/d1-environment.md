@@ -1,7 +1,7 @@
 # 方向 D1：环境完善
 
-> **最后更新**：2026-05-21
-> **任务数量**：25项 (6工具 + 19文档)
+> **最后更新**：2026-06-07
+> **任务数量**：35项 (6工具 + 29文档)
 
 ---
 
@@ -21,10 +21,10 @@
 
 | 优先级 | 工具任务 | 文档任务 | 总计 |
 |--------|----------|----------|------|
-| P0 | 2项 ✅ | 19项 | 21 |
+| P0 | 2项 ✅ | 29项 | 31 |
 | P1 | 3项 | - | 3 |
 | P2 | 1项 | - | 1 |
-| **总计** | **6** | **19** | **25** |
+| **总计** | **6** | **29** | **35** |
 
 ---
 
@@ -55,6 +55,21 @@
 | [ ] Mainline build verification workflow / mainline 构建验证链路说明 | `document/tutorial/build/` |
 | [ ] Patch workflow guide / patch 工作流实战说明 | `document/tutorial/build/` |
 | [ ] Common build failure troubleshooting / 常见构建失败排查说明 | `document/tutorial/troubleshooting/` |
+
+#### P0-1: Ubuntu/Linux 基础 (新增，基于旧教程 Ch 2)
+
+| 任务 | 相关文件 |
+|------|----------|
+| [ ] Linux basic commands tutorial / Linux 基础命令教程 | `document/tutorial/ubuntu/` |
+| [ ] Shell scripting basics / Shell 脚本编程基础 | `document/tutorial/ubuntu/` |
+| [ ] File system详解 / Linux 文件系统与目录结构 | `document/tutorial/ubuntu/` |
+| [ ] User and permission management / 用户与权限管理 | `document/tutorial/ubuntu/` |
+| [ ] Disk and file management / 磁盘与文件管理 | `document/tutorial/ubuntu/` |
+| [ ] Network configuration and debugging / 网络配置与调试 | `document/tutorial/ubuntu/` |
+| [ ] VIM quick start / VIM 快速入门 | `document/tutorial/ubuntu/` |
+| [ ] Serial port tools guide / 串口工具使用指南 | `document/tutorial/ubuntu/` |
+| [ ] Makefile basics / Makefile 基础与语法 | `document/tutorial/ubuntu/` |
+| [ ] Text editing in terminal / 终端下文本编辑 (VIM/Gedit) | `document/tutorial/ubuntu/` |
 
 #### P0-1: Rootfs 与用户空间 (9项)
 
