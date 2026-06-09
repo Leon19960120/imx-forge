@@ -162,7 +162,21 @@ ext4ls mmc 0:2 /
 run sdbootaes
 ```
 
-没有的话，用手动启动兜底：
+如果环境里没有，可以快速设置一套：
+
+```text
+# SD 快速启动环境设置
+setenv sd_dev 0
+setenv fdt_addr 0x83000000
+setenv sdargs 'setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk0p2 rootwait rw'
+setenv loadsdimage 'ext4load mmc ${sd_dev}:1 ${loadaddr} /zImage'
+setenv loadsdfdt 'ext4load mmc ${sd_dev}:1 ${fdt_addr} /imx6ull-aes.dtb'
+setenv sdbootaes 'echo Booting AES from SD ...; run sdargs; mmc dev ${sd_dev}; run loadsdimage; run loadsdfdt; bootz ${loadaddr} - ${fdt_addr}'
+saveenv
+run sdbootaes
+```
+
+手动启动兜底（不依赖预设环境变量）：
 
 ```text
 setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk0p2 rootwait rw

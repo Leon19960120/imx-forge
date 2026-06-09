@@ -301,7 +301,21 @@ ext4ls mmc 1:2 /
 run emmcbootaes
 ```
 
-手动启动兜底：
+如果环境里没有，可以快速设置一套：
+
+```text
+# eMMC 快速启动环境设置
+setenv emmc_dev 1
+setenv fdt_addr 0x83000000
+setenv emmcargs 'setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw'
+setenv loademmcimage 'ext4load mmc ${emmc_dev}:1 ${loadaddr} /zImage'
+setenv loademmcfdt 'ext4load mmc ${emmc_dev}:1 ${fdt_addr} /imx6ull-aes.dtb'
+setenv emmcbootaes 'echo Booting AES from eMMC ...; run emmcargs; mmc dev ${emmc_dev}; run loademmcimage; run loademmcfdt; bootz ${loadaddr} - ${fdt_addr}'
+saveenv
+run emmcbootaes
+```
+
+手动启动兜底（不依赖预设环境变量）：
 
 ```text
 setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 rootfstype=ext4 rootwait rw
