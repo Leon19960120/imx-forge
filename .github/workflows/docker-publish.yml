@@ -6,14 +6,11 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Image tag to build'
-        required: true
-        default: 'latest'
-        type: choice
-        options:
-          - latest
-          - preview
+      extra_tag:
+        description: 'Optional extra image tag, for example latest or preview'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -75,7 +72,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=raw,value=${{ github.event.inputs.extra_tag }},enable=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.extra_tag != '' }}
 
       - name: Build and push
         if: steps.policy.outputs.should_publish == 'true'
