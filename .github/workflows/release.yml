@@ -19,6 +19,11 @@ on:
       create_github_release:
         description: 'Create a GitHub Release'
         required: true
+        default: false
+        type: boolean
+      publish_docker_image:
+        description: 'Publish Docker image for this version'
+        required: true
         default: true
         type: boolean
       dry_run:
@@ -140,6 +145,8 @@ jobs:
             echo "- Latest stable tag: \`${latest_tag}\`"
             echo "- New version: \`${new_version}\`"
             echo "- Release type: \`${RELEASE_TYPE}\`"
+            echo "- Create GitHub Release: \`${{ inputs.create_github_release }}\`"
+            echo "- Publish Docker image: \`${{ inputs.publish_docker_image }}\`"
             echo "- Release document: \`${release_doc_status}\`"
           } >> "${GITHUB_STEP_SUMMARY}"
 
@@ -215,6 +222,8 @@ jobs:
             echo ""
             echo "- Previous tag: ${LATEST_TAG}"
             echo "- New tag: ${NEW_VERSION}"
+            echo "- GitHub Release: ${{ inputs.create_github_release }}"
+            echo "- Docker image: ${{ inputs.publish_docker_image }}"
           } > release-body.md
 
           echo "body_file=release-body.md" >> "${GITHUB_OUTPUT}"
@@ -227,6 +236,9 @@ jobs:
         shell: bash
         env:
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          CREATE_GITHUB_RELEASE: ${{ inputs.create_github_release }}
+          PUBLISH_DOCKER_IMAGE: ${{ inputs.publish_docker_image }}
         run: |
           set -euo pipefail
 
@@ -239,7 +251,15 @@ jobs:
             exit 1
           fi
 
-          git tag -a "${NEW_VERSION}" -m "IMX-Forge ${NEW_VERSION}"
+          {
+            echo "IMX-Forge ${NEW_VERSION}"
+            echo ""
+            echo "Release-Type: ${RELEASE_TYPE}"
+            echo "GitHub-Release: ${CREATE_GITHUB_RELEASE}"
+            echo "Docker-Image: ${PUBLISH_DOCKER_IMAGE}"
+          } > tag-message.txt
+
+          git tag -a "${NEW_VERSION}" -F tag-message.txt
           git push origin "refs/tags/${NEW_VERSION}"
 
       - name: Create GitHub Release
