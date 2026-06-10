@@ -167,8 +167,8 @@ MAJOR 只用于不兼容变化。
 正式发布示例：
 
 ```text
-当前最新 tag: v1.0.0
-release_type=patch -> v1.0.1
+当前最新 tag: v1.0.3
+release_type=patch -> v1.0.4
 release_type=minor -> v1.1.0
 release_type=major -> v2.0.0
 ```
@@ -268,21 +268,23 @@ IMX-Forge vX.Y.Z
 
 ## 7. README 版本 Banner
 
-在 README.md badge 区域追加版本 badge，使用 shields.io 显示最新 GitHub Release 版本：
+在 README.md badge 区域追加版本 badge，使用 shields.io 同时显示最新 GitHub tag 和最新 GitHub Release：
 
 ```markdown
-[![Release](https://img.shields.io/github/v/release/Awesome-Embedded-Learning-Studio/imx-forge?style=flat-square&label=Release&color=blue)](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/releases/latest)
+[![Tag](https://img.shields.io/github/v/tag/Awesome-Embedded-Learning-Studio/imx-forge?sort=semver&style=flat-square&label=Tag&color=blue)](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/tags)
+[![Latest Stable](https://img.shields.io/github/v/release/Awesome-Embedded-Learning-Studio/imx-forge?style=flat-square&label=latest%20stable&color=blue)](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/releases/latest)
 ```
 
 插入位置建议在 CI badge 之后：
 
 ```markdown
 [![CI](https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/actions/workflows/ci-build.yml/badge.svg)](...)
-[![Release](https://img.shields.io/github/v/release/Awesome-Embedded-Learning-Studio/imx-forge?style=flat-square&label=Release&color=blue)](...)
+[![Tag](https://img.shields.io/github/v/tag/Awesome-Embedded-Learning-Studio/imx-forge?sort=semver&style=flat-square&label=Tag&color=blue)](...)
+[![Latest Stable](https://img.shields.io/github/v/release/Awesome-Embedded-Learning-Studio/imx-forge?style=flat-square&label=latest%20stable&color=blue)](...)
 [![License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)](LICENSE)
 ```
 
-由于 GitHub Release 与 Docker 镜像发布已经解耦，README badge 展示的是最新 GitHub Release，不一定等于最新 git tag 或 Docker 镜像版本。这是有意设计：Release 用于公告稳定节点，Docker 镜像可按需更频繁更新。
+由于 GitHub Release 与 Docker 镜像发布已经解耦，Tag badge 展示最新 git tag，避免 PATCH 版本只打 tag、不创建 GitHub Release 时页面版本号滞后；latest stable badge 展示最新 GitHub Release，用于公告稳定节点。
 
 ---
 
