@@ -8,7 +8,6 @@
 
 一键生成 IMX-Forge **整站教程**的单本 PDF,采用纯 Python 链路:**pandoc**(markdown → html5,带目录与代码高亮)+ **WeasyPrint**(html → pdf,CSS Paged Media)。
 
-该脚本绕开 VitePress / 构建出的网站 / Chromium,直接把 `document/` 下的 markdown 源渲染成「一本书」。`build-pdf.sh` 本身只是**固化入口**:负责把工作目录切到仓库根,然后用 `uv` 按需拉取依赖(`pypandoc-binary` 内置 pandoc;`weasyprint` 需系统库 pango/cairo)并执行真正的核心脚本 [scripts/build_pdf.py](../../../scripts/build_pdf.py)。CI 中由 [.github/workflows/pdf-export.yml](../../../.github/workflows/pdf-export.yml) 手动触发调用。
 
 ## 使用方法
 
@@ -33,74 +32,6 @@ uv run --no-project --with pypandoc-binary --with weasyprint \
 | `cd "$(dirname "$0")/.."` | 切到仓库根目录,保证相对路径(`document/`、`scripts/`、`dist-pdf/`)正确 |
 | `exec uv run --no-project --with pypandoc-binary --with weasyprint` | 用 `uv` 在隔离环境按需拉取依赖,`--no-project` 表示不依赖本项目的虚拟环境 |
 | `python3 scripts/build_pdf.py "$@"` | 执行核心渲染脚本,转发额外参数 |
-
-## 执行流程
-
-1. **初始化**:开启 `set -euo pipefail`,切到仓库根目录。
-2. **拉依赖**:由 `uv` 按需安装 `pypandoc-binary`(含 pandoc)与 `weasyprint`。
-3. **收集章节**(`build_pdf.py`):按「卷顺序 → sidebar.ts 的 sortEntries/LEARNING_ORDER → 字典序」DFS 遍历 `document/`,得到符合网站侧边栏阅读顺序的 markdown 列表。
-4. **预处理 markdown**:剥离 YAML frontmatter 与 VitePress 专属语法(Vue 组件标签、`<ChapterLink>` 转列表项等),得到 pandoc 能干净处理的 md。
-5. **pandoc 转换**:markdown → html5,生成目录(`--toc`,深度 3)、tango 代码高亮,保留 raw HTML。
-6. **注入封面与样式**:移除 pandoc 默认标题块,插入美化封面(眉题/书名/副标题/作者/生成日期);挂载 [scripts/book.css](../../../scripts/book.css) 的 CSS Paged Media 样式。
-7. **WeasyPrint 渲染**:html → pdf,按卷分页(`part-break` / `chapter-break`)输出到 `dist-pdf/imx-forge.pdf`,打印体积。
-
-## 依赖关系
-
-### 依赖的脚本与文件
-- [scripts/build_pdf.py](../../../scripts/build_pdf.py) — 核心渲染逻辑(章节收集、预处理、pandoc + WeasyPrint 调用)
-- [scripts/book.css](../../../scripts/book.css) — PDF 排版样式(CSS Paged Media:封面、分页、代码高亮等)
-- `document/` — 被渲染的 markdown 源(`scripts/`、`tutorial/` 等卷目录)
-
-> 阅读顺序**复刻**(而非运行时读取)`site/.vitepress/config/sidebar.ts` 的排序逻辑:想调整 PDF 内章节顺序 = 改 `document/` 里的目录名/数字前缀(与网站侧边栏保持一致),无需改本脚本。
-
-### 依赖的工具
-- `uv` — Astral 的 Python 运行器,负责按需拉取/隔离依赖
-- `python3` — 解释器
-- `pypandoc-binary`(uv 拉取)— 内置 pandoc,markdown → html5
-- `weasyprint`(uv 拉取)— html → pdf,需系统库支持:
-  - `libpango-1.0-0`、`libpangoft2-1.0-0`、`libharfbuzz0b`
-  - `libcairo2`、`libgdk-pixbuf-2.0-0`
-  - 中文字体:`fonts-noto-cjk`(否则中文渲染为方块)
-
-> 本机已预装上述系统库;CI 里由 `pdf-export.yml` 的 `apt-get` 步骤安装。
-
-## 环境变量
-
-无特殊环境变量要求。依赖完全由 `uv` 在隔离环境内管理,不污染本机 Python 环境。
-
-## 输出产物
-
-- **本地/CI 产物**:`dist-pdf/imx-forge.pdf`(文件名固定)
-- **CI 上传**:GitHub Actions artifact(名 `imx-forge-pdf`,14 天质检留存)
-- **CI 发布**:独立轻量 PDF Release,asset 名固定 `imx-forge.pdf`,供稳定下载链接指向:
-  ```
-  https://github.com/Awesome-Embedded-Learning-Studio/imx-forge/releases/latest/download/imx-forge.pdf
-  ```
-
-## 故障排除
-
-### 常见错误
-
-**错误**: WeasyPrint 报缺库 / 中文显示为方块(■)
-**原因**: 系统缺少 pango/cairo/harfbuzz 等库,或缺中文字体 `fonts-noto-cjk`
-**解决**:
-```bash
-sudo apt-get install -y \
-  libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b \
-  libcairo2 libgdk-pixbuf-2.0-0 fonts-noto-cjk
-```
-
-**错误**: `uv: command not found`
-**原因**: 本机未安装 `uv`
-**解决**: 安装 [uv](https://docs.astral.sh/uv/)(如 `curl -LsSf https://astral.sh/uv/install.sh | sh`)
-
-**错误**: 报 `未在 document/ 找到任何 markdown`
-**原因**: 未在仓库根运行,或 `document/` 目录缺失
-**解决**: 用 `./scripts/build-pdf.sh`(脚本会自动 `cd` 到仓库根),并确认 `document/` 存在
-
-**错误**: VitePress 专属组件(如 `<RoadMap>`)残留在 PDF 里
-**原因**: 新增的 Vue 组件名未加入预处理器的白名单
-**解决**: 在 [scripts/build_pdf.py](../../../scripts/build_pdf.py) 的 `VUE_WRAP_LINE` / `RESIDUAL_COMP` 正则里补上该组件名
 
 ## 设计理念
 
